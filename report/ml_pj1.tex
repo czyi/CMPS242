@@ -1,0 +1,162 @@
+%
+% File acl2015.tex
+%
+% Contact: car@ir.hit.edu.cn, gdzhou@suda.edu.cn
+%%
+%% Based on the style files for ACL-2014, which were, in turn,
+%% Based on the style files for ACL-2013, which were, in turn,
+%% Based on the style files for ACL-2012, which were, in turn,
+%% based on the style files for ACL-2011, which were, in turn, 
+%% based on the style files for ACL-2010, which were, in turn, 
+%% based on the style files for ACL-IJCNLP-2009, which were, in turn,
+%% based on the style files for EACL-2009 and IJCNLP-2008...
+
+%% Based on the style files for EACL 2006 by 
+%%e.agirre@ehu.es or Sergi.Balari@uab.es
+%% and that of ACL 08 by Joakim Nivre and Noah Smith
+
+\documentclass[11pt]{article}
+\usepackage{acl2015}
+\usepackage{times}
+\usepackage{url}
+\usepackage{latexsym}
+\usepackage{graphicx}
+
+%\setlength\titlebox{5cm}
+
+% You can expand the titlebox if you need extra space
+% to show all the authors. Please do not make the titlebox
+% smaller than 5cm (the original size); we will check this
+% in the camera-ready version and ask you to change it back.
+
+
+\title{Anime Artist Analysis based on CNN}
+
+\author{Ziyi chen \\
+  Computer Science  \\
+  UC Santa Cruz\\
+  {\tt zchen139@ucsc.edu} \\\And
+   Chujiao Hou\\
+  Computer Science  \\
+  UC Santa Cruz\\
+  {\tt chou8@ucsc.edu} \\\And
+   Xinyuan Ma\\
+  Computer Engineering  \\
+  UC Santa Cruz\\
+  {\tt xma34@ucsc.edu} \\}
+  
+  
+
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+%www.pixiv.net 插画交流网站%
+
+Artist identification is an interesting and challenging problem primarily focused on fine-art. With the development of computer technology, many scientists tried different ways like explicitly defining classification features to solve the problem. Our dataset is crawled from pixiv (\url {www.pixiv.net}), which is a Japanese online community for artists. We want to try various models ranging from a simple convolutional neural network (CNN) designed from scratch to a ResNet-18 network with transfer learning for identification, clustering and plagiarism detection.
+
+\end{abstract}
+
+\section{Introduction}
+
+%以往的画家身份识别很多事针对有名的画家，有名的作品的手绘。一些有名的画家会有特定的风格，人眼可以很容易的识别出来。随着科技的发展，对电子作品需求的增加，数位板比手绘便捷，越来越多的画家更喜欢创作电子作品。p站是balabala，我们相对p站上画风/内容一定程度上相似的画作按作者进行分类。可用于：鉴别抄袭；鉴别画家身份（某些匿名的画作是否为某个作家创作）%
+
+Pixiv is a Japanese online community for artists, launched on September 10, 2007, by Takahiro Kamitani.  Pixiv aims to provide a place for artists to exhibit their illustrations and get feedback via a rating system and user comments. As of September 2016, the site consists of over 43 million illustration submissions. 
+
+Previous work of artist identification mainly focuses on the world-famous artists with a variety of painting styles, and some of them is easy for the human to recognize due to unique style, except counterfeits. We want to concentrate on illustrations of Japanese anime, which have a similar style as a whole. But there are differences between every artist, like color preference, brushwork. Nowadays, pretty artists especially young people sharing painting cross internet are more likely to directly draw pictures in the computer with the development of digital panel, which is more convenient to paint and modification without canvas, pens, and pigments.
+
+We plan to crawl illustrations of around 100 famous artists in pixiv who has submitted more than 100 paintings. First, we want to train CNN model to identify artists. Sometimes artist may upload his/her illustrations anonymously for some reason, so the CNN model can identify who is he/she. Also, we can apply plagiarism detection based on the result of identification. It is somehow difficult for the human to distinguish imitation from reference, but the computer may have some insight into the problem. Then we can do cluster or classify illustrations based on tags on the pixiv to find out artists with a similar style.
+
+
+\section{Related Work}
+Currently, image identification and classification is a hot topic and there are a lot of references. Maximum Likelihood Image Identification and Restoration Based on the expectation-maximum Algorithm, proposed by A.K. Katsaggelos,  showing that expectation maximum algorithm is a powerful iterative procedure for computing ML estimates of unknown parameters involved in the likelihood function of the observed data[1]. Deep Residual Learning for Image Recognition[2], present a residual learning framework to ease the training of networks that are substantially deeper than those used previously; this paper explicitly reformulate the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions, which provide a new idea for us. 
+
+And for image clustering, Spatial Models for Fuzzy Clustering proposed by Dzung L. Pham, proposing a novel approach to fuzzy clustering for image segmentation where a new objective function is proposed for incorporating spatial context into fuzzy C-means algorithm[3]. Image Clustering using Local Discriminant Models and Global Integration, by Yi Yang , Dong Xu, Feiping Nie, Shuicheng Yan, YueTing Zhuang,  they constructing a local clique comprising the data point and its neighboring data points, and using a local discriminant model for each local clique to evaluate the clustering performance of samples within the local clique[4].
+
+
+\section{Method}
+
+We want to use several methods and compare their performance - support vector machines (SVM), convolutional neural network (CNN), Very Deep Convolutional Networks (VGGNet), Deep Residual Learning network (ResNet). We may try ResNet from scratch and ResNet transfer learning transfer learning.
+
+SVM are supervised learning models with associated learning algorithms that analyze data used for classification and regression analysis. 
+
+CNN is a class of deep, feed-forward artificial neural networks that have successfully been applied to analyzing visual imagery. CNsN use a variation of multi-layer perceptrons designed to require minimal preprocessing.
+
+VGGNet network is quite simple and using only $3\times 3$ convolutional layers stacked on top of each other in increasing depth. Reducing volume size is handled by max pooling. 
+
+Deep Residual Learning network is an intriguing network that can ease the training of networks that are substantially deeper than those used
+previously.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{Picture1.png}
+  \caption{Examples of scenery illustrations.}
+  \label{words segmentation1}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{Picture2.png}
+  \caption{Examples of figure illustrations in pixiv.}
+  \label{words segmentation1}
+\end{figure}
+
+% include your own bib file like this:
+%\bibliographystyle{acl}
+%\bibliography{acl2015}
+
+\begin{thebibliography}{}
+\bibitem[\protect\citename{He, K.}2016]{He, K.:01}
+He, K., Zhang, X., Ren, S., Sun, J.
+\newblock 2016.
+\newblock {\em Deep residual learning for image recognition.}.
+\newblock In Proceedings of the IEEE conference on computer vision and pattern recognition (pp. 770-778).
+
+
+\bibitem[\protect\citename{Huh}2016]{Huh:02}
+Huh, Minyoung, Pulkit Agrawal, and Alexei A. Efros.
+\newblock 2016.
+\newblock {\em What makes ImageNet good for transfer learning?}.
+\newblock arXiv preprint arXiv:1608.08614 (2016).
+
+
+\bibitem[\protect\citename{Huh}2016]{Huh:02}
+Simonyan K, Zisserman A.
+\newblock 2014.
+\newblock {\em Very deep convolutional networks for large-scale image recognition.}.
+\newblock arXiv preprint arXiv:1409.1556. 2014 Sep 4.
+
+\bibitem[\protect\citename{Huh}2016]{Huh:02}
+A.K. Katsaggelos.
+\newblock 2014.
+\newblock {\em Maximum Likelihood Image Identification and Restoration Based on the EM Algorithm}.
+\newblock  University Department of Electrical Engineering and Computer Science The Technological Institute Evanston, IL, 60208
+
+\bibitem[\protect\citename{Huh}2016]{Huh:02}
+ Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun.
+\newblock 2014.
+\newblock {\em Deep Residual Learning for Image Recognition}.
+\newblock The IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2016, pp. 770-778
+
+\bibitem[\protect\citename{Huh}2016]{Huh:02}
+Dzung L. Pham.
+\newblock 2014.
+\newblock {\em Spatial Models for Fuzzy Clustering}.
+\newblock  Laboratory of Personality and Cognition, Gerontology Research Center, NIA/NIH
+
+\bibitem[\protect\citename{Huh}2016]{Huh:02}
+Yi Yang, Dong Xu, Feiping Nie, Shuicheng Yan, YueTing Zhuang.
+\newblock 2014.
+\newblock {\em Image Clustering using Local Discriminant Models and Global Integration}.
+\newblock  
+
+
+
+
+
+\end{thebibliography}
+
+
+
+\end{document}
