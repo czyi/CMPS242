@@ -1,3 +1,4 @@
+
 \documentclass{article}
 
 % if you need to pass options to natbib, use, e.g.:
@@ -35,7 +36,7 @@
 % on the second line, try using \AND instead of \And before the third
 % author name.
 
-\author{Ziyi chen \\
+\author{Ziyi Chen \\
   Computer Science  \\
   UC Santa Cruz\\
   {\tt zchen139@ucsc.edu} \\\And
@@ -56,18 +57,18 @@
 \maketitle
 
 \begin{abstract}
-Artist recognition is not easy for human beings if the artworks are general and share many similarities, but modern machine learning or deep learning models may help people identify the artwork authors. In this project, we trained Convolutional Neural Networks (CNN) identifying Japanese anime artists. Our dataset was crawled from Pixiv, a well-known Japanese website containing lots of fine anime artworks. Specifically, the dataset has 9 authors and each one has 200 paintings. We trained different kinds of networks, from very basic Conv2D net to more advanced networks, in order to carry out the identification. It turned out that traditional neural networks can in some way identify different authors, but the accuracy could be improved to a better level by tuning hyper parameters or using more advanced networks such as ResNet and VGGNet.
+Artist recognition is not easy for human beings if the artworks are general and share many similarities, but modern machine learning or deep learning models may help people identify the artwork authors. In this project, we trained Convolutional Neural Networks (CNN) identifying Japanese anime artists. Our dataset was crawled from Pixiv, a well-known Japanese website containing lots of fine anime artworks. Specifically, the dataset has 9 authors and each one has 200 paintings. We trained different kinds of networks, from a very basic Conv2D net to more advanced networks, in order to carry out the identification. It turned out that traditional neural networks can in some way identify different authors, but the accuracy could be improved to a better level by tuning hyperparameters or using more advanced networks such as ResNet and VGGNet.
 
 \end{abstract}
 
 \section{Introduction}
 Pixiv is a Japanese online community for artists, launched on September 10, 2007, by Takahiro Kamitani. Pixiv aims to provide a place for artists to exhibit their illustrations and get feedback via a rating system and user comments. As of September 2016, the site consists of over 43 million illustration submissions.
 
-Artist identification has very different difficulties. Some classic artworks by very famous artists like Van Gogh, Monet, or Pablo Picasso, have very distinguished artists’ personal styles and painting structures. These artworks’ authors may be easier for both human beings and neural networks to identify. But the problem lies in many modern arts like Japanese animes. There are great works and unique styles but many more artworks are highly similar. Even well-known comics artists draw people, scenery or still lives alike. To make things worse, many artists no longer draw in traditional ways such as pen and brush. Many artists especially young ones like sharing paintings across the internet. In order to conveniently spreading their work, they are more likely to directly draw pictures in the computer with equipments like digital panels or handwritting pads.
+Artist identification has very different difficulties. Some classic artworks by very famous artists like Van Gogh, Monet, or Pablo Picasso, have very distinguished artists’ personal styles and painting structures. These artworks’ authors may be easier for both human beings and neural networks to identify. But the problem lies in many modern arts like Japanese animes. There are great works and unique styles but many more artworks are highly similar. Even well-known comics artists draw people, scenery or still lives alike. To make things worse, many artists no longer draw in traditional ways such as pen and brush. Many artists especially young ones like sharing paintings across the internet. In order to conveniently spreading their work, they are more likely to directly draw pictures on the computer with equipment like digital panels or handwriting pads.
 
-We want to concentrate on illustrations of Japanese anime, which have a similar style as a whole. But there are still differences between every artist, like color preference, brushwork and painting structures. Previous work on artist recognition were done by specialists in artworks, or computer scientists who had good comprehension of art, and they typically selected feature representations manually and used these features to build supervised learning models. But in our project, based on the hypothesis that every artist has unique styles and characteristics, even if differences are very latent, we trained CNNs for this problem. It is likely that CNNs can identify best representations of features as they are trained.
+We want to concentrate on illustrations of Japanese anime, which have a similar style as a whole. But there are still differences between every artist, like color preference, brushwork and painting structures. Previous work on artist recognition was done by specialists in artworks, or computer scientists who had a good comprehension of art, and they typically selected feature representations manually and used these features to build supervised learning models. But in our project, based on the hypothesis that every artist has unique styles and characteristics, even if differences are very latent, we trained CNNs for this problem. It is likely that CNNs can identify best representations of features as they are trained.
 
-Also it is highly possible that simple Con2D net could not perform well and reach the required accuracy, we also consider building other CNN models like VGGNet and ResNet, which could build deeper and more efficient networks. By starting with basic Con2D net and only two author identification, we do this project step by step to make the model more complicated and add more authors to be identified.
+Also, it is highly possible that simple Con2D net could not perform well and reach the required accuracy, we also consider building other CNN models like VGGNet and ResNet, which could build deeper and more efficient networks. By starting with basic Con2D net and only two author identification, we do this project step by step to make the model more complicated and add more authors to be identified.
 
 
 \section{Related work}
@@ -82,7 +83,7 @@ Recently, CNN has been proved to be quite efficient and accurate on many image r
 
 \section{Dataset}
 \subsection{Crawling}
-The image dataset is crawled from Pixiv (\url{https://www.pixiv.net/}). We first use a chrome extension called Pxer, which can be used under the webpage of a certain artist and crawls all image url of the artist. We randomly select 16 artrists who have uploaded more than 200 illustrations and use Pxer to get url. The we tried to use downloader like Thunder to batch download pictures, but it failed. Beacuse Pixiv forbids to access the image directly using the url without refer in the http head. Then we used Python and imitated the http head to crawl illustrations. We have more than 5000 origin images from 16 different authors. Samples of illustrations is shown in Figure \ref{pixiv_sample}.
+The image dataset is crawled from Pixiv (\url{https://www.pixiv.net/}). We first use a chrome extension called Pxer, which can be used under the webpage of a certain artist and crawls all image URL of the artist. We randomly select 16 artists who have uploaded more than 200 illustrations and use Pxer to get URL. We tried to use downloader like Thunder to batch download pictures, but it failed. Because Pixiv forbids to access the image directly using the URL without referring to the HTTP head. Then we used Python and imitated the HTTP head to crawl illustrations. We have more than 5000 origin images from 16 different authors. Samples of illustrations are shown in Figure \ref{pixiv_sample}.
 
 \begin{figure}[ht]
   \centering
@@ -93,11 +94,11 @@ The image dataset is crawled from Pixiv (\url{https://www.pixiv.net/}). We first
 
 \subsection{Image Proprecessing}
 Compressing and cropping images is an important step in image preprocessing. 
-The size of images varies from 50 kilobytes to 3 megabytes.  We first deleted the pictures without characteristics of painter (such as blank pages, advertisements, etc.). We used two different ways to proprecess the image.
+The size of images varies from 50 kilobytes to 3 megabytes.  We first deleted the pictures without characteristics of the painter (such as blank pages, advertisements, etc.). We used two different ways to process the image.
 
-The first is to rescale image. Through OpenCV, we compressed the picture to the size of $500 \times 500$ pixels. After that we manually selected the picture which is obviously distorted after being compressed and then deleted them. But it may lose the pixel information of images.
+The first is to rescale image. Through OpenCV, we compressed the picture to the size of $500 \times 500$ pixels. After that, we manually selected the picture which is obviously distorted after being compressed and then deleted them. But it may lose the pixel information of images.
 
-The second wat is to crop image from center as shown in \ref{crop_sample}. Since some iamge is quite large and the important information of image is more likely to be in the center of image. This way could use the information more efficiently. Also the image Pure white and pure black images are removed. We previous only have around 300 images. After cropping, we could have more than 3000 images. 
+The second wat is to crop the image from center as shown in \ref{crop_sample}. Since some image is quite large and the important information of the image is more likely to be in the center of the image. This way could use the information more efficiently. Also, the image Pure white and pure black images are removed. We previous only have around 300 images. After cropping, we could have more than 3000 images. 
 
 \begin{figure}[ht]
   \centering
@@ -112,11 +113,10 @@ The second wat is to crop image from center as shown in \ref{crop_sample}. Since
 \section{Conv2D networks}
 
 Hyper parameters include number of layers, filter size, stride and padding number, learning rate and so forth. The input tensor is fed into the model and after each layer (or sublayer) the size of output tensor could be calculated by the following equation:
-$$n=m+2p-fs+1$$
-$$(n = \frac{m+2p-f}{s} + 1)$$
-where m is the size of input tensor, n is the size of output tensor, p is the number of padding number, s is the number of stride.
+$$n = \frac{m+2p-f}{s} + 1$$
+where m is the size of input tensor, n is the size of output tensor, p is the number of padding number, s is the number of strides.
 
-In the first attempt the Conv2D network only contains 2 layers. Each layer contains 3 sublayers, which are convolutional layer, rectified linear unit layer (ReLU) and max pooling layer. Also the input training set contains 360 images as is mentioned above, with each image of size 500 x 500 x 3. The input images were first transformed into matrix representation, and then stored in a Numpy ndarray as a whole. This works well with input tensors in TensorFlow.
+In the first attempt the Conv2D network only contains 2 layers. Each layer contains 3 sublayers, which are convolutional layer, rectified linear unit layer (ReLU) and max-pooling layer. Also the input training set contains 360 images as is mentioned above, with each image of size 500 x 500 x 3. The input images were first transformed into matrix representation, and then stored in a Numpy array as a whole. This works well with input tensors in TensorFlow.
 
 The first layer contains a convolutional layer of filter size equals 4 x 4 x 3, and there are 8 such filters. Other hyper parameters are: stride equals 1 and padding equals 1. Then the result is passed to an activation function, which is ReLU. Thirdly comes the max pooling sublayer, which has filter size of 8 x 8 with number of stride equals 8 and padding equals 1. After the first layer, each output tensor is of size 16 x 16 x 8.
 
@@ -163,23 +163,20 @@ Then we tried to make the network deeper. We added a new layer to the second lay
 \section{ResNet}
 \subsection{Implement}
 
-Deeper neural networks are more difficult to train. ResNet present a residual learning framework to ease the training of networks that are substantially deeper than those used previously. ResNet explicitly reformulate the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions. ResNets use residual blocks to ensure that upstream gradients are propagated to lower network layers, aiding in optimization convergence in deep networks [7].
+Deeper neural networks are more difficult to train. A residual learning framework (ResNet) could ease the training of networks that are substantially deeper than those used previously. ResNet explicitly reformulate the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions. ResNets use residual blocks to ensure that upstream gradients are propagated to lower network layers, aiding in optimization convergence in deep networks [7].
 
 
-Our second network is the ResNet-14 network with fullyconnected layer. The model is trained from scratch to learn features solely from our dataset. 	The network architecture is shown in Figure \ref{resnet}. We used the 14-layer version of ResNet for faster training and decreasing the memory usage due to the limit of our computer.
+Our second network is the ResNet-14 network with fullyconnected layer. The model is trained from scratch to learn features solely from our dataset.     The network architecture is shown in Figure \ref{resnet}. We used the 14-layer version of ResNet for faster training and decreasing the memory usage due to the limit of our computer.
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.3\linewidth]{resnet.png}
-  \caption{Result 2}
+  \caption{ResNet-14.}
   \label{resnet}
 \end{figure}
 
 \subsection{Experiment}
-We first use $250 \times 250 \times 3$ size image from 9 different artists (each artist contributes 700 images) to train the model. The result is shown in \ref{resnet_accuracy}. With the increaing of training steps, the training accuracy increases until 1. But the test accuracy is around 28\% finally. The overfit might due to the lack of images or the complexicity of the model.
-
-Then we try $100 \times 100 \times 3$ size image from 9 different artists (each artist contributes 4000 images) and delete 4 layers before max pool. But the result is not better. It might because we didn't remove the images that only contains same color and no other information. Since most of the image is drawn directly in the computer, there are many pure color cropped images.
-
+We first use $250 \times 250 \times 3$ size image from 9 different artists (each artist contributes 800 images) to train the model. The result is shown in \ref{resnet_accuracy}. With the increaing of training steps, the training accuracy increases until 1. But the test accuracy is around 28\% finally. The perfermance is bad, but better than randomly assgin a class (arrcuracy = $\frac{1}{9}$).The overfit might due to the lack of images or the complexicity of the model.
 
 \begin{figure}[ht]
   \centering
@@ -188,49 +185,30 @@ Then we try $100 \times 100 \times 3$ size image from 9 different artists (each 
   \label{resnet_accuracy}
 \end{figure}
 
-\section{Conclusion and Future Work}
+Then we try $100 \times 100 \times 3$ size image from 9 different artists (each artist contributes 4000 images) and delete 4 layers before max pool. But the result is not better. It might because we didn't remove the images that only contains same color and no other information. Since most of the image is drawn directly in the computer, there are many pure color cropped images.
+
+We try to let the ResNet to only determine two artists and something interesting happens. We combined the first nine authors in pairs and train the model using $250 \times 250 \times 3$ size images from the two artists (each artist contributes 800 images). The test accuracy varies from 0.559 - 0.957 as shown in Table \ref{my-label}. It seems that some artists have strong personal style and some artists have similar styles. Artist 2 has accuracy rate above 80\% with all other artist. We check the images by human eye and see that artist 2 has strong personal style and his/her iamges are easily to be distingush from other artists' images. We also check he images of artist 6 and 7 which has highest accuracy 0.957627. The main difference between the two artist is that 6 uses light color and 7 uses dark color.
 
 
 
-
-
-\subsection{Tables}
-
-All tables must be centered, neat, clean and legible.  The table
-number and title always appear before the table.  See
-Table~\ref{sample-table}.
-
-Place one line space before the table title, one line space after the
-table title, and one line space after the table. The table title must
-be lower case (except for first word and proper nouns); tables are
-numbered consecutively.
-
-Note that publication-quality tables \emph{do not contain vertical
-  rules.} We strongly suggest the use of the \verb+booktabs+ package,
-which allows for typesetting high-quality, professional tables:
-\begin{center}
-  \url{https://www.ctan.org/pkg/booktabs}
-\end{center}
-This package was used to typeset Table~\ref{sample-table}.
-
-\begin{table}[t]
-  \caption{Sample table title}
-  \label{sample-table}
-  \centering
-  \begin{tabular}{lll}
-    \toprule
-    \multicolumn{2}{c}{Part}                   \\
-    \cmidrule{1-2}
-    Name     & Description     & Size ($\mu$m) \\
-    \midrule
-    Dendrite & Input terminal  & $\sim$100     \\
-    Axon     & Output terminal & $\sim$10      \\
-    Soma     & Cell body       & up to $10^6$  \\
-    \bottomrule
-  \end{tabular}
+\begin{table}[]\footnotesize
+\centering
+\caption{My caption}
+\label{my-label}
+\begin{tabular}{@{}llllllllll@{}}
+\toprule
+  & 0        & 1        & 2        & 3        & 4        & 5        & 6        & 7        & 8 \\ \midrule
+0 & -        &          &          &          &          &          &          &          &   \\
+1 & 0.559322 & -        &          &          &          &          &          &          &   \\
+2 & 0.872881 & 0.90678  & -        &          &          &          &          &          &   \\
+3 & 0.720339 & 0.786667 & 0.805085 & -        &          &          &          &          &   \\
+4 & 0.559322 & 0.659864 & 0.876712 & 0.720339 & -        &          &          &          &   \\
+5 & 0.838983 & 0.78169  & 0.851064 & 0.671429 & 0.669492 & -        &          &          &   \\
+6 & 0.847458 & 0.897436 & 0.825806 & 0.707792 & 0.711409 & 0.635593 & -        &          &   \\
+7 & 0.694915 & 0.844156 & 0.875817 & 0.815789 & 0.80916  & 0.896825 & 0.957627 & -        &   \\
+8 & 0.895161 & 0.860294 & 0.903704 & 0.873134 & 0.888889 & 0.871253 & 0.885714 & 0.813559 & - \\ \bottomrule
+\end{tabular}
 \end{table}
-
-
 
 
 \section{Conclusion and Future Work}
@@ -255,16 +233,7 @@ This research was creative due to Machine Learning course taught by Manfred K. W
 
 \section*{References}
 
-References follow the acknowledgments. Use unnumbered first-level
-heading for the references. Any choice of citation style is acceptable
-as long as you are consistent. It is permissible to reduce the font
-size to \verb+small+ (9 point) when listing the references. {\bf
-  Remember that you can go over 8 pages as long as the subsequent ones contain
-  \emph{only} cited references.}
-\medskip
-
-\small
-
+  
 [1] Alexander, J.A.\ \& Mozer, M.C.\ (1995) Template-based algorithms
 for connectionist rule extraction. In G.\ Tesauro, D.S.\ Touretzky and
 T.K.\ Leen (eds.), {\it Advances in Neural Information Processing
@@ -279,18 +248,15 @@ learning and recall at excitatory recurrent synapses and cholinergic
 modulation in rat hippocampal region CA3. {\it Journal of
   Neuroscience} {\bf 15}(7):5249-5262.
   
-  
-[3]Z. A. M. X. Bosch, A. Image classification using rois and multiple kernel learning, 2008. [16]S. Lazebnik, C. Schmid, and J. Ponce. Beyond bags of features: Spatial pyramid matching for recognizing natural scene categories, 2006.
+[4]Z. A. M. X. Bosch, A. Image classification using rois and multiple kernel learning, 2008. [16]S. Lazebnik, C. Schmid, and J. Ponce. Beyond bags of features: Spatial pyramid matching for recognizing natural scene categories, 2006.
 
-[7] K. He, X. Zhang, S. Ren, and J. Sun. Deep residual learning for image recognition. arXiv preprint, abs/1512.03385,
+[5] K. He, X. Zhang, S. Ren, and J. Sun. Deep residual learning for image recognition. arXiv preprint, abs/1512.03385,
 2015.
  
-[19]T. E. Lombardi. The classification of style in fine-art painting. ETD Collection for Pace University, 2005. 
+[6]T. E. Lombardi. The classification of style in fine-art painting. ETD Collection for Pace University, 2005. 
 
-[20]D. G. Lowe. Distinctive image features from scale-invariant keypoints., 2004. 
+[7]D. G. Lowe. Distinctive image features from scale-invariant keypoints., 2004. 
 
-[12] J. Jou and S. Agrawal. Artist identification for renaissance paintings.
-  
-
+[8] J. Jou and S. Agrawal. Artist identification for renaissance paintings.
 
 \end{document}
