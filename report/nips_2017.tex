@@ -61,8 +61,6 @@ Artist recognition is not easy for human beings if the artworks are general and 
 \end{abstract}
 
 \section{Introduction}
-\label{gen_inst}
-
 Pixiv is a Japanese online community for artists, launched on September 10, 2007, by Takahiro Kamitani. Pixiv aims to provide a place for artists to exhibit their illustrations and get feedback via a rating system and user comments. As of September 2016, the site consists of over 43 million illustration submissions.
 
 Artist identification has very different difficulties. Some classic artworks by very famous artists like Van Gogh, Monet, or Pablo Picasso, have very distinguished artists’ personal styles and painting structures. These artworks’ authors may be easier for both human beings and neural networks to identify. But the problem lies in many modern arts like Japanese animes. There are great works and unique styles but many more artworks are highly similar. Even well-known comics artists draw people, scenery or still lives alike. To make things worse, many artists no longer draw in traditional ways such as pen and brush. Many artists especially young ones like sharing paintings across the internet. In order to conveniently spreading their work, they are more likely to directly draw pictures in the computer with equipments like digital panels or handwritting pads.
@@ -82,11 +80,36 @@ And for image clustering, Spatial Models for Fuzzy Clustering proposed by Dzung 
 
 Recently, CNN has been proved to be quite efficient and accurate on many image recognition tasks. After trained under properly selected parameters, CNNs can successfully decompose artworks especially paintings into style and content components. They can even transfer style from one painting to another and there are already many fancy applications such as Prisma. This implies that CNNs can capture artwork styles.
 
+\section{Dataset}
+\subsection{Crawling}
+The image dataset is crawled from Pixiv (\url{https://www.pixiv.net/}). We first use a chrome extension called Pxer, which can be used under the webpage of a certain artist and crawls all image url of the artist. We randomly select 16 artrists who have uploaded more than 200 illustrations and use Pxer to get url. The we tried to use downloader like Thunder to batch download pictures, but it failed. Beacuse Pixiv forbids to access the image directly using the url without refer in the http head. Then we used Python and imitated the http head to crawl illustrations. We have more than 5000 origin images from 16 different authors. Samples of illustrations is shown in Figure \ref{pixiv_sample}.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.94\linewidth]{pixiv_sample.png}
+  \caption{Samples of illustrations from Pixiv.}
+  \label{pixiv_sample}
+\end{figure}
+
+\subsection{Image Proprecessing}
+Compressing and cropping images is an important step in image preprocessing. 
+The size of images varies from 50 kilobytes to 3 megabytes.  We first deleted the pictures without characteristics of painter (such as blank pages, advertisements, etc.). We used two different ways to proprecess the image.
+
+The first is to rescale image. Through OpenCV, we compressed the picture to the size of $500 \times 500$ pixels. After that we manually selected the picture which is obviously distorted after being compressed and then deleted them. But it may lose the pixel information of images.
+
+The second wat is to crop image from center as shown in \ref{crop_sample}. Since some iamge is quite large and the important information of image is more likely to be in the center of image. This way could use the information more efficiently. Also the image Pure white and pure black images are removed. We previous only have around 300 images. After cropping, we could have more than 3000 images. 
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\linewidth]{crop_sample.png}
+  \caption{Samples of cropping the image.}
+  \label{crop_sample}
+\end{figure}
 
 
-\section{Implement and Experiment}
 
-\subsection{Conv2D networks}
+
+\section{Conv2D networks}
 
 Hyper parameters include number of layers, filter size, stride and padding number, learning rate and so forth. The input tensor is fed into the model and after each layer (or sublayer) the size of output tensor could be calculated by the following equation:
 $$n=m+2p-fs+1$$
@@ -137,20 +160,35 @@ Then we tried to make the network deeper. We added a new layer to the second lay
 
 
 
-\subsection{ResNet}
+\section{ResNet}
+\subsection{Implement}
 
-Deeper neural networks are more difficult to train. ResNet present a residual learning framework to ease the training of networks that are substantially deeper than those used previously. ResNet explicitly reformulate the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions. ResNet are easier to optimize, and can gain accuracy from considerably increased depth. [1]
-
-
-
+Deeper neural networks are more difficult to train. ResNet present a residual learning framework to ease the training of networks that are substantially deeper than those used previously. ResNet explicitly reformulate the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions. ResNets use residual blocks to ensure that upstream gradients are propagated to lower network layers, aiding in optimization convergence in deep networks [7].
 
 
+Our second network is the ResNet-14 network with fullyconnected layer. The model is trained from scratch to learn features solely from our dataset. 	The network architecture is shown in Figure \ref{resnet}. We used the 14-layer version of ResNet for faster training and decreasing the memory usage due to the limit of our computer.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.3\linewidth]{resnet.png}
+  \caption{Result 2}
+  \label{resnet}
+\end{figure}
+
+\subsection{Experiment}
+We first use $250 \times 250 \times 3$ size image from 9 different artists (each artist contributes 700 images) to train the model. The result is shown in \ref{resnet_accuracy}. With the increaing of training steps, the training accuracy increases until 1. But the test accuracy is around 28\% finally. The overfit might due to the lack of images or the complexicity of the model.
+
+Then we try $100 \times 100 \times 3$ size image from 9 different artists (each artist contributes 4000 images) and delete 4 layers before max pool. But the result is not better. It might because we didn't remove the images that only contains same color and no other information. Since most of the image is drawn directly in the computer, there are many pure color cropped images.
 
 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\linewidth]{resnet_accuracy.png}
+  \caption{ResNet Accuracy}
+  \label{resnet_accuracy}
+\end{figure}
 
-
-
-\section{Conclution and Future Work}
+\section{Conclusion and Future Work}
 
 
 
@@ -193,11 +231,27 @@ This package was used to typeset Table~\ref{sample-table}.
 \end{table}
 
 
-\subsubsection*{Acknowledgments}
 
-Use unnumbered third level headings for the acknowledgments. All
-acknowledgments go at the end of the paper. Do not include
-acknowledgments in the anonymized submission, only in the final paper.
+
+\section{Conclusion and Future Work}
+
+\subsection{Conclusion}
+Based on our implementation and the attempt of hyper-parameters and different network, for Convolution Neural Network, the accuracy for two classes' identification is 0.056. But for Resnet, for the same classes' identification is also 0.559 which is only a little bit higher than the normal CNN network. But we test for the different classes' and found that the range of the accuracy for different classes' identification differs a lot, range from 0.559 - 0.957. The above results means that the accuracy depends very much on the chosen of authors. There are several reasons that the performance of the system is not good at all, one of the reason is that the dataset is quite small, for every authors we only have 200 pictures, this limited size of the dataset makes the work harder. So we divide every picture into four parts, trying to increase the number of the dataset, this helps a little to the system, the accuracy for two classes' identification raises from 0.056 to 0.625. Another reason is most figures under Japanese artist looks the very similar, big eye and small faces lolita with no obvious character's distinct features, let alone with that the images losses the brashes and strokes' characteristic due to that some authors prefer draw electronically. So Frankly speaking, the Anime Artist Analysis is a hard topic. 
+    
+\subsection{Future Work}
+Based on the low accuracy of the results from both traditional Convolution Neural Network and Residential Network, there are several ways that we think up to improve the performance of our identification and classification system. 
+
+So first, the most straightforward way is to test other hyper-parameters. And then we'd like to try to train the system by VGG network. VGG net always set the filter size as $3*3$, and used $2*2$ pooling size, and doubling the the number of filters after each pooling through out the whole network. VGG is a network that indicates that the deeper the better, so it will be slow to train the data. Actually this is already an on-going process, we started training our images by VGG net but it seems like VGG network has a high requirement on the hardware, so based on our laptop it seems really difficult to train to images and finished the process. 
+
+Another things that we could do is to increase our dataset size, crawling more images so that letting the system learn more.
+
+\subsubsection*{Acknowledgments}
+This research was creative due to Machine Learning course taught by Manfred K. Warmuth, Professor in Computer Science Department at University of California, Santa Cruz. I want to thank the professor for giving us an opportunity to implement the project, as well as imparting so many interesting knowledge. And I also want to thanks the teaching assistant of the course, Ehsan Amid and Tianyi Luo, who give us a lot of useful advices.
+
+
+
+
+
 
 \section*{References}
 
@@ -225,9 +279,11 @@ learning and recall at excitatory recurrent synapses and cholinergic
 modulation in rat hippocampal region CA3. {\it Journal of
   Neuroscience} {\bf 15}(7):5249-5262.
   
-[1]Deep Residual Learning for Image Recognition
   
 [3]Z. A. M. X. Bosch, A. Image classification using rois and multiple kernel learning, 2008. [16]S. Lazebnik, C. Schmid, and J. Ponce. Beyond bags of features: Spatial pyramid matching for recognizing natural scene categories, 2006.
+
+[7] K. He, X. Zhang, S. Ren, and J. Sun. Deep residual learning for image recognition. arXiv preprint, abs/1512.03385,
+2015.
  
 [19]T. E. Lombardi. The classification of style in fine-art painting. ETD Collection for Pace University, 2005. 
 
